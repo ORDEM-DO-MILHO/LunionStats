@@ -1,4 +1,4 @@
-export interface ILoginStudentDto {
+export interface IRequestLogin {
   email: string;
   password: string;
 }

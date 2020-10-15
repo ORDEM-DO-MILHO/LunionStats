@@ -1,13 +1,13 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
-import { ILoginStudentDto } from '../dto/login-student.dto';
 import { Student } from '../schemas/student.schema';
+import { CreateStudentDto } from '../dto/create-student.dto';
 
 @Injectable()
 export class StudentService {
@@ -16,26 +16,9 @@ export class StudentService {
     private readonly studentModel: Model<Student>,
   ) {}
 
-  async loginStudent(data: ILoginStudentDto) {
-    try {
-      const student = await this.studentModel.findOne({ email: data.email });
-
-      if (
-        student &&
-        (await this.comparePassword(data.password, student.password))
-      ) {
-        return student;
-      }
-    } catch (err) {
-      console.log(err);
-      throw new UnauthorizedException();
-    }
-  }
-
-  async createStudent(student: any) {
+  async createStudent(student: CreateStudentDto) {
     const studentModel = new this.studentModel(student);
     try {
-      studentModel.password = await this.encryptPassword(studentModel.password);
       return await studentModel.save();
     } catch (err) {
       console.log(err);
@@ -47,12 +30,19 @@ export class StudentService {
     return await this.studentModel.find();
   }
 
-  async findStudentById(id: any) {
+  async findStudentById(id: string) {
     try {
       return await this.studentModel.findById(id).exec();
     } catch (err) {
-      console.log(err);
-      throw new BadRequestException();
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async findStudentByEmail(email: string) {
+    try {
+      return await this.studentModel.findOne({ email }).exec();
+    } catch (err) {
+      throw new HttpException('Email not found', HttpStatus.NOT_FOUND);
     }
   }
 
@@ -77,58 +67,43 @@ export class StudentService {
   }
 
   // TODO NESTED ANNOTATIONS
-  async createStudentAnnotation(studentId: string, annotation: any) {
-    // try {
-    //   let student = await this.studentModel.findById(studentId);
-    //   student.annotations = annotation;
-    //   console.log(student);
-    //   return await student.save();
-    // } catch (err) {
-    //   console.log(err);
-    //   throw new BadRequestException();
-    // }
-  }
+  // async createStudentAnnotation(studentId: string, annotation: any) {
+  //   // try {
+  //   //   let student = await this.studentModel.findById(studentId);
+  //   //   student.annotations = annotation;
+  //   //   console.log(student);
+  //   //   return await student.save();
+  //   // } catch (err) {
+  //   //   console.log(err);
+  //   //   throw new BadRequestException();
+  //   // }
+  // }
 
-  async updateStudentAnnotation(id: string, annotation: any) {
-    //   try {
-    //     const s = await this.studentModel.findOneAndUpdate(
-    //       { _id:
-    //         'annotations._id': annotation._id,
-    //       },
-    //       { $addToSet: { annotations_id: annotation } },
-    //     );
-    //     console.log(s);
-    //   } catch (err) {
-    //     console.log(err);
-    //     throw new BadRequestException();
-    //   }
-  }
+  // async updateStudentAnnotation(id: string, annotation: any) {
+  //   //   try {
+  //   //     const s = await this.studentModel.findOneAndUpdate(
+  //   //       { _id:
+  //   //         'annotations._id': annotation._id,
+  //   //       },
+  //   //       { $addToSet: { annotations_id: annotation } },
+  //   //     );
+  //   //     console.log(s);
+  //   //   } catch (err) {
+  //   //     console.log(err);
+  //   //     throw new BadRequestException();
+  //   //   }
+  // }
 
-  async deleteStudentAnnotation(id: string, annotation: any) {
-    //   try {
-    //     const student = await this.studentModel.findById(id);
-    //     await student.annotations
-    //       .id(mongoose.Types.ObjectId(annotation._id))
-    //       .remove();
-    //     return await student.save();
-    //   } catch (err) {
-    //     console.log(err);
-    //     throw new BadRequestException();
-    //   }
-  }
-
-  // Private funcionts&methods
-
-  private async encryptPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
-  }
-
-  private async comparePassword(
-    plainPassword: string,
-    password: string,
-  ): Promise<boolean> {
-    const verify = await bcrypt.compare(plainPassword, password);
-    if (!verify) return false;
-    return true;
-  }
+  // async deleteStudentAnnotation(id: string, annotation: any) {
+  //   //   try {
+  //   //     const student = await this.studentModel.findById(id);
+  //   //     await student.annotations
+  //   //       .id(mongoose.Types.ObjectId(annotation._id))
+  //   //       .remove();
+  //   //     return await student.save();
+  //   //   } catch (err) {
+  //   //     console.log(err);
+  //   //     throw new BadRequestException();
+  //   //   }
+  // }
 }
