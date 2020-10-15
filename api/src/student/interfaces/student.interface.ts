@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { Status } from '../types/status-type';
 import { IAnnotation } from './annotation.interface';
 
 export interface IStudent extends Document {
@@ -6,6 +7,7 @@ export interface IStudent extends Document {
   name: string;
   summoner: string;
   email: string;
+  status: Status;
   password: string;
   annotations: IAnnotation[];
 }

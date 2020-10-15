@@ -2,10 +2,12 @@
 
 - [x] <strike>DB Connection(mongo)</strike>
 - [x] <strike>CRUD Student<strike>
-- [ ] JwtAuth :small_red_triangle:
+- [x] <strike>JwtAuth<strike> 
+- [ ] CRUD Teacher
+- [ ] CRUD Admin
 - [ ] Profile csv
 - [ ] Match history
 - [ ] Swagger docs :question:
 - [ ] ACL :question:
-- [ ] Annotations per match
+- [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [ ] Match rating (:star::star::star::star::star:)

@@ -4,29 +4,19 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ICreateStudentDto } from '../dto/create-student.dto';
-import { ILoginStudentDto } from '../dto/login-student.dto';
 import { StudentService } from '../services/student.service';
 import { ICreateAnnotationDto } from '../dto/create-annotation.dto';
-import { IUpdateAnnotationDto } from '../dto/update-annotation.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { IUpdateStudentDto } from '../dto/update-student.dto';
 
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  @Post('register')
-  async register(@Body() createStudentDto: ICreateStudentDto) {
-    return await this.studentService.createStudent(createStudentDto);
-  }
-
-  @Post('/login')
-  async login(@Body() studentCredentials: ILoginStudentDto) {
-    return await this.studentService.loginStudent(studentCredentials);
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAllStudents() {
     return await this.studentService.findAll();
@@ -39,7 +29,7 @@ export class StudentController {
   }
 
   @Put('/:_id')
-  async updStudent(@Param() id: string, @Body() data: ICreateAnnotationDto) {
+  async updStudent(@Param() id: string, @Body() data: IUpdateStudentDto) {
     return await this.studentService.updateStudent(id, data);
   }
 
@@ -49,36 +39,36 @@ export class StudentController {
   }
 
   // Annotations Routes
-  @Post('/:_id/annotation/create')
-  async createAnnotation(
-    @Param() studentId: string,
-    @Body() annotation: ICreateAnnotationDto,
-  ) {
-    return await this.studentService.createStudentAnnotation(
-      studentId,
-      annotation,
-    );
-  }
+  // @Post('/:_id/annotation/create')
+  // async createAnnotation(
+  //   @Param() studentId: string,
+  //   @Body() annotation: ICreateAnnotationDto,
+  // ) {
+  //   return await this.studentService.createStudentAnnotation(
+  //     studentId,
+  //     annotation,
+  //   );
+  // }
 
-  @Put('/:_id/annotation/update')
-  async updateAnnotation(
-    @Param() studentId: string,
-    @Body() annotation: IUpdateAnnotationDto,
-  ) {
-    return await this.studentService.updateStudentAnnotation(
-      studentId,
-      annotation,
-    );
-  }
+  // @Put('/:_id/annotation/update')
+  // async updateAnnotation(
+  //   @Param() studentId: string,
+  //   @Body() annotation: IUpdateAnnotationDto,
+  // ) {
+  //   return await this.studentService.updateStudentAnnotation(
+  //     studentId,
+  //     annotation,
+  //   );
+  // }
 
-  @Delete('/:_id/annotation/delete')
-  async deleteAnnotation(
-    @Param() studentId: string,
-    @Body() annotationId: string,
-  ) {
-    return await this.studentService.deleteStudentAnnotation(
-      studentId,
-      annotationId,
-    );
-  }
+  // @Delete('/:_id/annotation/delete')
+  // async deleteAnnotation(
+  //   @Param() studentId: string,
+  //   @Body() annotationId: string,
+  // ) {
+  //   return await this.studentService.deleteStudentAnnotation(
+  //     studentId,
+  //     annotationId,
+  //   );
+  // }
 }
