@@ -21,20 +21,31 @@ export class StudentService {
     try {
       return await studentModel.save();
     } catch (err) {
-      console.log(err);
-      throw new BadRequestException();
+      throw new HttpException(
+        'could_not_create_student',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async findAll() {
-    return await this.studentModel.find();
+  async findAll(): Promise<Student[]> {
+    try {
+      const students = await this.studentModel.find();
+      students.map(s => (s.password = undefined));
+      return students;
+    } catch (err) {
+      throw new HttpException(
+        'could_not_find_any_student',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async findStudentById(id: string) {
     try {
       return await this.studentModel.findById(id).exec();
     } catch (err) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('student_not_found', HttpStatus.NOT_FOUND);
     }
   }
 
@@ -42,7 +53,7 @@ export class StudentService {
     try {
       return await this.studentModel.findOne({ email }).exec();
     } catch (err) {
-      throw new HttpException('Email not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('email_not_found', HttpStatus.NOT_FOUND);
     }
   }
 
@@ -51,18 +62,23 @@ export class StudentService {
       await this.studentModel.findByIdAndUpdate(id, studentData).exec();
       return await this.studentModel.findById(id);
     } catch (err) {
-      console.log(err);
-      throw new BadRequestException();
+      throw new HttpException(
+        'could_not_update_student',
+        HttpStatus.NOT_MODIFIED,
+      );
     }
   }
 
   async deleteById(id: string) {
     try {
       await this.studentModel.findByIdAndDelete(id).exec();
-      return { message: 'student_deleted!' };
+      return { message: 'student_deleted' };
     } catch (err) {
       console.log(err);
-      throw new BadRequestException();
+      throw new HttpException(
+        'could_not_delete_student',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
