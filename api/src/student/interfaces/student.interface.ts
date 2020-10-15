@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { IAnnotation } from './annotation.interface';
 
 export interface IStudent extends Document {
   id?: string;
@@ -6,5 +7,5 @@ export interface IStudent extends Document {
   summoner: string;
   email: string;
   password: string;
-  annotations: { [key: string]: any };
+  annotations: IAnnotation[];
 }

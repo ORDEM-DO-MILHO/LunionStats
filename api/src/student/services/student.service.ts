@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IStudent } from '../interfaces/student.interface';
 import * as bcrypt from 'bcrypt';
 import { ILoginStudentDto } from '../dto/login-student.dto';
+import { Student } from '../schemas/student.schema';
 
 @Injectable()
 export class StudentService {
   constructor(
-    @InjectModel('Student')
-    private readonly studentModel: Model<IStudent>,
+    @InjectModel(Student.name)
+    private readonly studentModel: Model<Student>,
   ) {}
 
   async loginStudent(data: ILoginStudentDto) {
@@ -32,7 +32,7 @@ export class StudentService {
     }
   }
 
-  async createStudent(student: any): Promise<Partial<IStudent | null>> {
+  async createStudent(student: any) {
     const studentModel = new this.studentModel(student);
     try {
       studentModel.password = await this.encryptPassword(studentModel.password);
@@ -43,14 +43,13 @@ export class StudentService {
     }
   }
 
-  async findAll(): Promise<IStudent[] | null> {
+  async findAll() {
     return await this.studentModel.find();
   }
 
-  async findStudentById(id: string) {
+  async findStudentById(id: any) {
     try {
-      console.log(id);
-      return await this.studentModel.findById({ id });
+      return await this.studentModel.findById(id).exec();
     } catch (err) {
       console.log(err);
       throw new BadRequestException();
@@ -59,7 +58,8 @@ export class StudentService {
 
   async updateStudent(id: string, studentData: any) {
     try {
-      return await this.studentModel.findOneAndUpdate({ id }, { studentData });
+      await this.studentModel.findByIdAndUpdate(id, studentData).exec();
+      return await this.studentModel.findById(id);
     } catch (err) {
       console.log(err);
       throw new BadRequestException();
@@ -68,13 +68,56 @@ export class StudentService {
 
   async deleteById(id: string) {
     try {
-      await this.studentModel.findByIdAndDelete(id);
+      await this.studentModel.findByIdAndDelete(id).exec();
       return { message: 'student_deleted!' };
     } catch (err) {
       console.log(err);
       throw new BadRequestException();
     }
   }
+
+  // TODO NESTED ANNOTATIONS
+  async createStudentAnnotation(studentId: string, annotation: any) {
+    // try {
+    //   let student = await this.studentModel.findById(studentId);
+    //   student.annotations = annotation;
+    //   console.log(student);
+    //   return await student.save();
+    // } catch (err) {
+    //   console.log(err);
+    //   throw new BadRequestException();
+    // }
+  }
+
+  async updateStudentAnnotation(id: string, annotation: any) {
+    //   try {
+    //     const s = await this.studentModel.findOneAndUpdate(
+    //       { _id:
+    //         'annotations._id': annotation._id,
+    //       },
+    //       { $addToSet: { annotations_id: annotation } },
+    //     );
+    //     console.log(s);
+    //   } catch (err) {
+    //     console.log(err);
+    //     throw new BadRequestException();
+    //   }
+  }
+
+  async deleteStudentAnnotation(id: string, annotation: any) {
+    //   try {
+    //     const student = await this.studentModel.findById(id);
+    //     await student.annotations
+    //       .id(mongoose.Types.ObjectId(annotation._id))
+    //       .remove();
+    //     return await student.save();
+    //   } catch (err) {
+    //     console.log(err);
+    //     throw new BadRequestException();
+    //   }
+  }
+
+  // Private funcionts&methods
 
   private async encryptPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);

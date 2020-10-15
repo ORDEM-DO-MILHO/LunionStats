@@ -10,6 +10,8 @@ import {
 import { ICreateStudentDto } from '../dto/create-student.dto';
 import { ILoginStudentDto } from '../dto/login-student.dto';
 import { StudentService } from '../services/student.service';
+import { ICreateAnnotationDto } from '../dto/create-annotation.dto';
+import { IUpdateAnnotationDto } from '../dto/update-annotation.dto';
 
 @Controller('student')
 export class StudentController {
@@ -30,18 +32,53 @@ export class StudentController {
     return await this.studentService.findAll();
   }
 
-  @Get('/:id')
+  @Get('/:_id')
   async findStdById(@Param() id: string) {
+    console.log(id);
     return await this.studentService.findStudentById(id);
   }
 
-  @Put('/:id')
-  async updStudent(@Param() id: string, @Body() data) {
+  @Put('/:_id')
+  async updStudent(@Param() id: string, @Body() data: ICreateAnnotationDto) {
     return await this.studentService.updateStudent(id, data);
   }
 
-  @Delete('/:id')
+  @Delete('/:_id')
   async delStudent(@Param() id: string) {
     return await this.studentService.deleteById(id);
+  }
+
+  // Annotations Routes
+  @Post('/:_id/annotation/create')
+  async createAnnotation(
+    @Param() studentId: string,
+    @Body() annotation: ICreateAnnotationDto,
+  ) {
+    return await this.studentService.createStudentAnnotation(
+      studentId,
+      annotation,
+    );
+  }
+
+  @Put('/:_id/annotation/update')
+  async updateAnnotation(
+    @Param() studentId: string,
+    @Body() annotation: IUpdateAnnotationDto,
+  ) {
+    return await this.studentService.updateStudentAnnotation(
+      studentId,
+      annotation,
+    );
+  }
+
+  @Delete('/:_id/annotation/delete')
+  async deleteAnnotation(
+    @Param() studentId: string,
+    @Body() annotationId: string,
+  ) {
+    return await this.studentService.deleteStudentAnnotation(
+      studentId,
+      annotationId,
+    );
   }
 }

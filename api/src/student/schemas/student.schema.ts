@@ -1,56 +1,58 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+import { Status } from '../types/status-type';
+import { Annotation } from './annotation.schema';
 
-function transformValue(doc, ret: { [key: string]: any }) {
+const transform = (doc: any, ret: any) => {
+  ret.id = ret._id;
   delete ret._id;
-  delete ret.password;
+  delete ret.__v;
+};
+@Schema({
+  timestamps: true,
+  toObject: {
+    transform,
+  },
+  toJSON: {
+    transform,
+  },
+})
+export class Student extends Document {
+  @Prop({
+    type: String,
+    require: [true, 'name cannot be empty'],
+    unique: false,
+  })
+  name: string;
+
+  @Prop({
+    type: String,
+    unique: [true, 'summoner already exists'],
+    require: [true, 'summoner cannot be empty'],
+  })
+  summoner: string;
+
+  @Prop({
+    type: String,
+    required: [true, 'Email can not be empty'],
+    unique: [true, 'email already exists'],
+    match: [
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Email should be valid',
+    ],
+  })
+  email: string;
+
+  @Prop({
+    type: String,
+  })
+  password: string;
+
+  @Prop({ enum: Object.values(Status) })
+  status: string;
+
+  @Prop({ type: Annotation })
+  annotations: Annotation[];
 }
 
-export const StudentSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      require: [true, 'name cannot be empty'],
-    },
-
-    summoner: {
-      type: String,
-      unique: [true, 'summoner already exists'],
-      require: [true, 'summoner cannot be empty'],
-    },
-
-    email: {
-      type: String,
-      required: [true, 'Email can not be empty'],
-      unique: [true, 'email already exists'],
-      match: [
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        'Email should be valid',
-      ],
-    },
-
-    password: {
-      type: String,
-      required: [true, 'Password can not be empty'],
-      minlength: [6, 'Password should include at least 6 chars'],
-    },
-
-    annotations: [
-      {
-        type: Object,
-      },
-    ],
-  },
-  {
-    timestamps: true,
-    toObject: {
-      virtuals: true,
-      versionKey: false,
-      transform: transformValue,
-    },
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: transformValue,
-    },
-  },
-);
+export const StudentSchema = SchemaFactory.createForClass(Student);
