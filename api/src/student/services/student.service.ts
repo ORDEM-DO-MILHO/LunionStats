@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Student } from '../schemas/student.schema';
@@ -43,7 +38,9 @@ export class StudentService {
 
   async findStudentById(id: string) {
     try {
-      return await this.studentModel.findById(id).exec();
+      const student = await this.studentModel.findById(id).exec();
+      student.password = undefined;
+      return student;
     } catch (err) {
       throw new HttpException('student_not_found', HttpStatus.NOT_FOUND);
     }
@@ -51,16 +48,30 @@ export class StudentService {
 
   async findStudentByEmail(email: string) {
     try {
-      return await this.studentModel.findOne({ email }).exec();
+      const student = await this.studentModel.findOne({ email }).exec();
+      student.password = undefined;
+      return student;
     } catch (err) {
       throw new HttpException('email_not_found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  public async findStudentBySummoner(summoner: string) {
+    try {
+      const student = await this.studentModel.findOne({ summoner }).exec();
+      student.password = undefined;
+      return student;
+    } catch (err) {
+      throw new HttpException('did_not_find_any_student', HttpStatus.NOT_FOUND);
     }
   }
 
   async updateStudent(id: string, studentData: any) {
     try {
       await this.studentModel.findByIdAndUpdate(id, studentData).exec();
-      return await this.studentModel.findById(id);
+      const student = await this.studentModel.findById(id);
+      student.password = undefined;
+      return student;
     } catch (err) {
       throw new HttpException(
         'could_not_update_student',

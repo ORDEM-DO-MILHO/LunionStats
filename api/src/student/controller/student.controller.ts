@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { StudentService } from '../services/student.service';
-import { ICreateAnnotationDto } from '../dto/create-annotation.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { IUpdateStudentDto } from '../dto/update-student.dto';
 

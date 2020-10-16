@@ -4,6 +4,7 @@ import { StudentModule } from './student/student.module';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
+import { TeacherModule } from './teacher/teacher.module';
 dotenv.config();
 
 @Module({
@@ -16,6 +17,7 @@ dotenv.config();
     }),
     StudentModule,
     AuthModule,
+    TeacherModule,
   ],
   controllers: [],
   providers: [],
