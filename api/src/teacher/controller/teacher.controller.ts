@@ -63,7 +63,6 @@ export class TeacherController {
     );
   }
 
-  // TODO
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Delete('/:_id')

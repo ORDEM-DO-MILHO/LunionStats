@@ -4,7 +4,7 @@
 - [x] <strike>CRUD Student</strike>
 - [x] <strike>JwtAuth</strike> 
 - [x] <strike>CRUD Teacher</strike>
-- [ ] CRUD Admin
+- [x] CRUD Admin
 - [ ] Profile csv
 - [ ] Match history
 - [ ] Swagger docs :question:
