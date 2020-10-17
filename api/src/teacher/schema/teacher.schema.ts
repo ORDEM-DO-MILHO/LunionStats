@@ -19,10 +19,10 @@ export class Teacher extends Document {
   })
   summoner: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'User', unique: true })
   user: mongoose.Types.ObjectId;
 
-  @Prop({ type: Object.values(Status), default: Status.Active })
+  @Prop({ enum: Object.values(Status) })
   status: string;
 }
 

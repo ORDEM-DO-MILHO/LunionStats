@@ -3,7 +3,6 @@ import { Document } from 'mongoose';
 import { Status } from 'src/auth/types/status.type';
 import { Annotation } from './annotation.schema';
 import * as mongoose from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
 
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id;

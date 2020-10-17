@@ -6,6 +6,8 @@ import { CreateStudentDto } from '../dto/create-student.dto';
 import { Student } from '../schemas/student.schema';
 import * as mongoose from 'mongoose';
 import { UserService } from 'src/user/services/user.service';
+import { UpdateStudentDto } from '../dto/update-student.dto';
+import { UserRequestDto } from 'src/user/dto/user-request.dto';
 @Injectable()
 export class StudentService {
   constructor(
@@ -14,15 +16,14 @@ export class StudentService {
     private readonly userService: UserService,
   ) {}
 
-  async createStudent(studentData: CreateStudentDto, reqUser: any) {
-    const user = await this.userService.findUserById(reqUser._id);
-
-    if (!user) throw new HttpException('user_not_found', HttpStatus.NOT_FOUND);
-
+  async createStudent(studentData: CreateStudentDto, userData: UserRequestDto) {
+    const user = await this.userService.findUserById(userData._id);
+    if (!user) {
+      throw new HttpException('user_not_found', HttpStatus.NOT_FOUND);
+    }
     try {
       delete user.password;
       delete user.__v;
-
       const student = new this.studentModel({
         ...studentData,
         user: mongoose.Types.ObjectId(user._id),
@@ -48,11 +49,6 @@ export class StudentService {
 
   async findAll(): Promise<Student[]> {
     try {
-      // return await this.studentModel
-      //   .find()
-      //   .populate('user')
-      //   .select('-password -__v')
-      //   .exec();
       return await this.studentModel
         .find()
         .populate({
@@ -82,20 +78,6 @@ export class StudentService {
     }
   }
 
-  async findStudentByEmail(email: string) {
-    try {
-      const student = await this.studentModel.findOne({ email }).exec();
-      return student
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('email_not_found', HttpStatus.NOT_FOUND);
-    }
-  }
-
   public async findStudentBySummoner(data: any) {
     try {
       const student = await this.studentModel.findOne({
@@ -112,28 +94,41 @@ export class StudentService {
     }
   }
 
-  async updateStudent(id: string, studentData: any) {
-    try {
-      await this.studentModel.findByIdAndUpdate(id, studentData).exec();
-      const student = await this.studentModel.findById(id);
-      return student
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException(
-        'could_not_update_student',
-        HttpStatus.NOT_MODIFIED,
-      );
+  async updateStudent(
+    id: string,
+    studentData: UpdateStudentDto,
+    userData: UserRequestDto,
+  ) {
+    const user = await this.userService.findUserById(userData._id);
+    const student = await this.studentModel.findById(id);
+    if (user._id.toString() === student.user.toString()) {
+      try {
+        await this.studentModel.findByIdAndUpdate(id, studentData).exec();
+        const student = await this.studentModel.findById(id);
+        return student
+          .populate({
+            path: 'user',
+            select: '-__v -password',
+          })
+          .execPopulate();
+      } catch (err) {
+        throw new HttpException(
+          'could_not_update_student',
+          HttpStatus.NOT_MODIFIED,
+        );
+      }
     }
+    throw new HttpException('not_authorized', HttpStatus.UNAUTHORIZED);
   }
 
   async deleteById(id: string) {
     try {
-      await this.studentModel.findByIdAndDelete(id).exec();
-      return { message: 'student_deleted' };
+      const student = await this.studentModel.findById(id).exec();
+      if (!student) {
+        throw new HttpException('student_not_found', HttpStatus.NOT_FOUND);
+      }
+      await this.studentModel.deleteOne({ _id: student.id });
+      return new HttpException('student_deleted!', HttpStatus.OK);
     } catch (err) {
       throw new HttpException(
         'could_not_delete_student',
@@ -142,7 +137,7 @@ export class StudentService {
     }
   }
 
-  // TODO NESTED ANNOTATIONS
+  // TODO ANNOTATIONS
   // async createStudentAnnotation(studentId: string, annotation: any) {
   //   // try {
   //   //   let student = await this.studentModel.findById(studentId);

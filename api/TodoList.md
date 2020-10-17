@@ -1,9 +1,9 @@
 ## TodoList for now :nerd_face:
 
 - [x] <strike>DB Connection(mongo)</strike>
-- [x] <strike>CRUD Student<strike>
-- [x] <strike>JwtAuth<strike> 
-- [ ] CRUD Teacher
+- [x] <strike>CRUD Student</strike>
+- [x] <strike>JwtAuth</strike> 
+- [x] <strike>CRUD Teacher</strike>
 - [ ] CRUD Admin
 - [ ] Profile csv
 - [ ] Match history

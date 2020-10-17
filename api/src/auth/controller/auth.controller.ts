@@ -8,6 +8,11 @@ import { CreateUserDto } from '../dto/create-user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('/register/admin')
+  async registerAdmin(@Body() createUser: CreateUserDto) {
+    return await this.authService.registerUserAdmin(createUser);
+  }
+
   @Post('/register/teacher')
   async registerTeacher(@Body() createUser: CreateUserDto) {
     return await this.authService.registerUserTeacher(createUser);
@@ -16,11 +21,6 @@ export class AuthController {
   @Post('/register/student')
   async registerStudent(@Body() createUser: CreateUserDto) {
     return await this.authService.registerUserStudent(createUser);
-  }
-
-  @Post('/register/admin')
-  async registerAdmin(@Body() createUser: CreateUserDto) {
-    return await this.authService.registerUserAdmin(createUser);
   }
 
   @UseGuards(LocalAuthGuard)
