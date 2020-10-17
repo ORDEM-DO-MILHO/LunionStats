@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UpdateTeacherDto } from '../dto/update-teacher.dto';
 import { TeacherService } from '../services/teacher.service';
 
@@ -6,11 +17,15 @@ import { TeacherService } from '../services/teacher.service';
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('teacher', 'admin')
   @Get()
-  public async findAll() {
+  public async index() {
     return await this.teacherService.findAllTeachers();
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('teacher', 'admin')
   @Get('/:_id')
   public async findById(@Param() id: string) {
     return await this.teacherService.findTeacherById(id);
@@ -22,7 +37,7 @@ export class TeacherController {
   }
 
   @Put('/:_id')
-  public async upTeacher(
+  public async updTeacher(
     @Param() id: string,
     @Body() teacherData: UpdateTeacherDto,
   ) {

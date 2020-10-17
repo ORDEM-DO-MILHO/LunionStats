@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateTeacherDto } from '../dto/create-teacher.dto';
 import { Teacher } from '../schema/teacher.schema';
 import { UpdateTeacherDto } from '../dto/update-teacher.dto';
 
@@ -12,7 +11,7 @@ export class TeacherService {
     private readonly teacherModel: Model<Teacher>,
   ) {}
 
-  public async createTeacher(teacherData: CreateTeacherDto): Promise<Teacher> {
+  public async createTeacher(teacherData: any): Promise<Teacher> {
     const teacher = new this.teacherModel(teacherData);
     try {
       return await teacher.save();
@@ -26,8 +25,7 @@ export class TeacherService {
 
   public async findAllTeachers() {
     try {
-      const teachers = await this.teacherModel.find();
-      return teachers.map(t => (t.password = undefined));
+      return await this.teacherModel.find();
     } catch (err) {
       throw new HttpException(
         'could_not_find_any_teacher',
@@ -39,7 +37,6 @@ export class TeacherService {
   public async findTeacherById(id: string) {
     try {
       const teacher = await this.teacherModel.findById(id).exec();
-      teacher.password = undefined;
       return teacher;
     } catch (err) {
       throw new HttpException('did_not_find_any_teacher', HttpStatus.NOT_FOUND);
@@ -49,7 +46,6 @@ export class TeacherService {
   public async findTeacherByEmail(email: string) {
     try {
       const teacher = await this.teacherModel.findOne({ email }).exec();
-      teacher.password = undefined;
       return teacher;
     } catch (err) {
       throw new HttpException('did_not_find_any_teacher', HttpStatus.NOT_FOUND);
@@ -59,7 +55,6 @@ export class TeacherService {
   public async findTeacherBySummoner(summoner: string) {
     try {
       const teacher = await this.teacherModel.findOne({ summoner }).exec();
-      teacher.password = undefined;
       return teacher;
     } catch (err) {
       throw new HttpException('did_not_find_any_teacher', HttpStatus.NOT_FOUND);
@@ -71,7 +66,6 @@ export class TeacherService {
       const teacher = await this.teacherModel
         .findOneAndUpdate({ id }, { teacherData })
         .exec();
-      teacher.password = undefined;
       return teacher;
     } catch (err) {
       throw new HttpException(

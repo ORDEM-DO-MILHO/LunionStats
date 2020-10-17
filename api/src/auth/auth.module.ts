@@ -7,13 +7,18 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import * as dotenv from 'dotenv';
+import { TeacherModule } from 'src/teacher/teacher.module';
+import { UserModule } from 'src/user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt.guard';
 dotenv.config();
 
 @Module({
   imports: [
     StudentModule,
     PassportModule,
-    // ConfigModule.forRoot(),
+    TeacherModule,
+    UserModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

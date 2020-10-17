@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Status } from 'src/student/types/status-type';
+import { Status } from 'src/auth/types/status.type';
+import * as mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Teacher extends Document {
@@ -18,25 +19,10 @@ export class Teacher extends Document {
   })
   summoner: string;
 
-  @Prop({
-    type: String,
-    required: [true, 'Email can not be empty'],
-    unique: [true, 'email already exists'],
-    match: [
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Email should be valid',
-    ],
-  })
-  email: string;
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
+  user: mongoose.Types.ObjectId;
 
-  @Prop({
-    type: String,
-    min: [6, 'password must have at least 6 characters'],
-    required: [true, 'must include a password'],
-  })
-  password: string;
-
-  @Prop({ type: Object.values(Status) })
+  @Prop({ type: Object.values(Status), default: Status.Active })
   status: string;
 }
 

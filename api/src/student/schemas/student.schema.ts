@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Status } from '../types/status-type';
+import { Status } from 'src/auth/types/status.type';
 import { Annotation } from './annotation.schema';
+import * as mongoose from 'mongoose';
+import { User } from 'src/user/schemas/user.schema';
 
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id;
@@ -20,7 +22,7 @@ const transform = (doc: any, ret: any) => {
 export class Student extends Document {
   @Prop({
     type: String,
-    require: [true, 'name cannot be empty'],
+    required: [true, 'name cannot be empty'],
     unique: false,
   })
   name: string;
@@ -28,31 +30,18 @@ export class Student extends Document {
   @Prop({
     type: String,
     unique: [true, 'summoner already exists'],
-    require: [true, 'summoner cannot be empty'],
+    required: [true, 'summoner cannot be empty'],
   })
   summoner: string;
-
-  @Prop({
-    type: String,
-    required: [true, 'Email can not be empty'],
-    unique: [true, 'email already exists'],
-    match: [
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Email should be valid',
-    ],
-  })
-  email: string;
-
-  @Prop({
-    type: String,
-  })
-  password: string;
 
   @Prop({ enum: Object.values(Status) })
   status: string;
 
-  @Prop({ type: Annotation })
-  annotations: Annotation[];
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'User', unique: true })
+  user: mongoose.Types.ObjectId;
+
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Annotation' })
+  annotations: Annotation;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

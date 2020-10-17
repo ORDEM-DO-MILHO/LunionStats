@@ -1,35 +1,70 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { StudentService } from 'src/student/services/student.service';
+import { TeacherService } from 'src/teacher/services/teacher.service';
+import { UserService } from 'src/user/services/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly studentService: StudentService,
+    private readonly teacherService: TeacherService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  public async registerStudent(studentData: any) {
+  public async registerUserTeacher(userData: CreateUserDto) {
     try {
-      studentData.password = await this.encryptPassword(studentData.password);
-      const student = await this.studentService.createStudent(studentData);
-      student.password = undefined;
-      return student;
+      userData.password = await this.encryptPassword(userData.password);
+      const user = await this.userService.createUserTeacher(userData);
+      user.password = undefined;
+      return user;
     } catch (err) {
       throw new HttpException(
-        'student_create_something_went_wrong',
+        'student_create_went_wrong',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  public async getAuthenticatedUser(email: string, password: string) {
+  public async registerUserStudent(userData: CreateUserDto) {
     try {
-      const student = await this.studentService.findStudentByEmail(email);
-      if (student && (await this.comparePassword(password, student.password))) {
-        student.password = undefined;
-        return student;
+      userData.password = await this.encryptPassword(userData.password);
+      const user = await this.userService.createUserStudent(userData);
+      user.password = undefined;
+
+      return user;
+    } catch (err) {
+      throw new HttpException(
+        'student_create_went_wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  public async registerUserAdmin(userData: CreateUserDto) {
+    try {
+      userData.password = await this.encryptPassword(userData.password);
+      const user = await this.userService.createUserAdmin(userData);
+      user.password = undefined;
+
+      return user;
+    } catch (err) {
+      throw new HttpException(
+        'student_create_went_wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  public async authenticaUser(email: string, password: string) {
+    try {
+      const user = await this.userService.findUserByEmail(email);
+      if (user && (await this.comparePassword(password, user.password))) {
+        user.password = undefined;
+        return user;
       }
       throw new HttpException('user_login_failed', HttpStatus.UNAUTHORIZED);
     } catch (err) {
@@ -38,7 +73,8 @@ export class AuthService {
   }
 
   public async signIn(data: any) {
-    const payload = { email: data.email, sub: data._id };
+    const user = await this.userService.findUserByEmail(data.email);
+    const payload = { email: user.email, sub: user._id, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload),
     };
