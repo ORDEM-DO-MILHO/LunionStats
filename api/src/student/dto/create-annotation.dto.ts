@@ -1,5 +1,13 @@
-export interface ICreateAnnotationDto {
-  content: string;
-  teacherId: string;
-  matchId: string;
+import { IsString, MinLength } from 'class-validator';
+
+export class CreateAnnotationDto {
+  id: string;
+
+  @IsString()
+  @MinLength(1, { message: 'content is too short' })
+  content?: string;
+
+  matchId?: string;
+
+  teacherId?: string;
 }

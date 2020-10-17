@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Status } from '../types/status-type';
+import { Status } from 'src/auth/types/status.type';
 import { IAnnotation } from './annotation.interface';
 
 export interface IStudent extends Document {
