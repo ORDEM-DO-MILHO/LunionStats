@@ -7,6 +7,23 @@ dotenv.config();
 
 const defaultAxiosHeaders = { 'X-Riot-Token': process.env.RIOT_API_KEY };
 
+const Tier = [
+  { name: 'IRON', value: 'Ferro' },
+  { name: 'BRONZE', value: 'Bronze' },
+  { name: 'SILVER', value: 'Prata' },
+  { name: 'GOLD', value: 'Ouro' },
+  { name: 'PLATINUM', value: 'Platina' },
+  { name: 'DIAMOND', value: 'Diamante' },
+  { name: 'MASTER', value: 'Mestre' },
+  { name: 'GRANDMASTER', value: 'Grão-Mestre' },
+  { name: 'CHALLENGER', value: 'Desafiante' },
+];
+
+const qType = [
+  { name: 'RANKED_SOLO_5x5', value: 'Raqueada solo 5x5' },
+  { name: 'RANKED_TEAM_5x5', value: 'Raqueada time 5x5' },
+];
+
 @Injectable()
 export class SummonerService {
   constructor(private readonly http: HttpService) {}
@@ -58,7 +75,11 @@ export class SummonerService {
         )
         .toPromise();
 
-      return result;
+      return result.map(el => ({
+        ...el,
+        tier: Tier.find(t => t.name === el['tier'])['value'],
+        queueType: qType.find(qu => qu.name === el['queueType'])['value'],
+      }));
     } catch (err) {
       return err;
     }
@@ -125,6 +146,7 @@ export class SummonerService {
     const match = [];
 
     // TODO OTIMIZAR (24-30s)
+    // 19/10 -> 55s + (shit)
     for (const mat in data.matches) {
       match.push(
         await this.getSummonerIndividualMatch(data.matches[mat]['gameId']),
