@@ -39,8 +39,8 @@ export class SummonerService {
         )
         .toPromise();
       return result;
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return { message: error.response.body, status: error.response.status };
     }
   }
 
@@ -109,57 +109,40 @@ export class SummonerService {
   }
 
   async getSummonerIndividualMatch(body: any) {
-    try {
-      const { data: match } = await this.http
-        .get(`https://br1.api.riotgames.com/lol/match/v4/matches/${body}`, {
-          headers: defaultAxiosHeaders,
-        })
-        .toPromise();
+    const { data: match } = await this.http
+      .get(`https://br1.api.riotgames.com/lol/match/v4/matches/${body}`, {
+        headers: defaultAxiosHeaders,
+      })
+      .toPromise();
 
-      const queueList = await this.getQueuesList();
-      const seasonsList = await this.getSeasonsList();
+    const queueList = await this.getQueuesList();
+    const seasonsList = await this.getSeasonsList();
 
-      const players = await this.formatPlayerInfo(match);
+    const players = await this.formatPlayerInfo(match);
 
-      const gameList: IMatchIndividual = {
-        gameId: match.gameId,
-        gameCreation: match.gameCreation,
-        gameDuration: match.gameDuration,
-        queueId: queueList.find(qu => qu.queueId === match.queueId)['map'],
-        seasonId: seasonsList.find(se => se.id === match.seasonId)['season'],
-        gameMode: match.gameMode,
-        gameType: match.gameType,
-        players,
-      };
+    const gameList: IMatchIndividual = {
+      gameId: match.gameId,
+      gameCreation: match.gameCreation,
+      gameDuration: match.gameDuration,
+      queueId: queueList.find(qu => qu.queueId === match.queueId)['map'],
+      seasonId: seasonsList.find(se => se.id === match.seasonId)['season'],
+      gameMode: match.gameMode,
+      gameType: match.gameType,
+      players,
+    };
 
-      return gameList;
-    } catch (err) {
-      console.log(err);
-      return err;
-    }
+    return gameList;
   }
 
   async formatHistoryList(data: any) {
-    const queuesList = await this.getQueuesList();
-    const seasonsList = await this.getSeasonsList();
-    const champList = await this.getChampionsList();
-    const match = [];
-
     // TODO OTIMIZAR (24-30s)
     // 19/10 -> 55s + (shit)
-    for (const mat in data.matches) {
-      match.push(
-        await this.getSummonerIndividualMatch(data.matches[mat]['gameId']),
-      );
-    }
+    const listMatch = data.matches.map(async match => {
+      const response = await this.getSummonerIndividualMatch(match['gameId']);
+      return response;
+    });
 
-    return await data.matches.map(el => ({
-      ...el,
-      champion: champList.find(ch => parseInt(ch.key) === el.champion)['name'],
-      queue: queuesList.find(qu => qu.queueId === el.queue)['map'],
-      season: seasonsList.find(se => se.id === el.season)['season'],
-      match: match.find(mat => mat.gameId === el.gameId),
-    }));
+    return await Promise.all(listMatch);
   }
 
   async formatPlayerStats(match: any) {

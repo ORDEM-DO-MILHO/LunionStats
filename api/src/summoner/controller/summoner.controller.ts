@@ -1,18 +1,25 @@
-import { Body, Controller, Get, HttpException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { SummonerService } from '../services/summoner.service';
-
+// import { data } from './data';
 @Controller('summoner')
 export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
 
   @Get('/info')
   async getSummonerInfos(@Body() summoner: string) {
-    const result = await this.summonerService.getSummonerInfo(summoner);
-    if (result.message) {
-      const code = result.message.split('code')[1];
-      throw new HttpException('something_went_wrong', code);
+    try {
+      //data.teams[0].dragonKills
+      const result = await this.summonerService.getSummonerInfo(summoner);
+      return result;
+    } catch (error) {
+      throw new HttpException(error, error.status);
     }
-    return result;
   }
 
   @Get('/history')
@@ -21,10 +28,7 @@ export class SummonerController {
       summoner,
       null,
     );
-    if (result.message) {
-      const code = result.message.split('code')[1];
-      throw new HttpException('something_went_wrong', code);
-    }
+
     return result;
   }
 
@@ -52,13 +56,13 @@ export class SummonerController {
 
   @Get('/match')
   async summonerMatch(@Body() matchId: bigint) {
-    const result = await this.summonerService.getSummonerIndividualMatch(
-      matchId,
-    );
-    if (result.message) {
-      const code = result.message.split('code')[1];
-      throw new HttpException('something_went_wrong', code);
+    try {
+      const result = await this.summonerService.getSummonerIndividualMatch(
+        matchId,
+      );
+      return result;
+    } catch (error) {
+      throw new HttpException('something_went_wrong', error);
     }
-    return result;
   }
 }
