@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { AccessControlModule } from 'nest-access-control';
 import { roles } from './user/types/role.type';
 import { AdminModule } from './admin/admin.module';
+import { SummonerModule } from './summoner/summoner.module';
 dotenv.config();
 
 @Module({
@@ -25,6 +26,7 @@ dotenv.config();
     TeacherModule,
     UserModule,
     AdminModule,
+    SummonerModule,
   ],
   controllers: [],
   providers: [],

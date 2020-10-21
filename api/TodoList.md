@@ -1,13 +1,24 @@
 ## TodoList for now :nerd_face:
 
-- [x] <strike>DB Connection(mongo)</strike>
+- [x] <strong><strike>DB Connection(mongo)</strike>
 - [x] <strike>CRUD Student</strike>
 - [x] <strike>JwtAuth</strike> 
 - [x] <strike>CRUD Teacher</strike>
-- [x] CRUD Admin
+- [x] <strike>CRUD Admin</strike>
+- [x] <strike>ACL :question:</strike>
+- [x] <strike>Match history :question: (needs to be optmized)</strike>
+- [ ] Riot API 
 - [ ] Profile csv
-- [ ] Match history
 - [ ] Swagger docs :question:
-- [ ] ACL :question:
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [ ] Match rating (:star::star::star::star::star:)
+- [ ] get  -> post  ou add parametro pra URL
+- [ ] cache -> cache match e info
+- [ ] criar as contantes  -> 
+- [ ] colocar no docker -> criar docker compose
+- [ ] add titulo a anotacao
+- [ ] criar login com google -> check passport
+- [ ] ADD env PORT=3000
+- [ ] add data de nascimento
+- [ ] add materias aplicadas pelo professor
+- [ ] add lista de contatos do user (twitter, discord, ...)<strong>

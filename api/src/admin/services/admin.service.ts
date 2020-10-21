@@ -141,6 +141,7 @@ export class AdminService {
   async deleteById(id: string, userData: any) {
     const user = await this.userService.findUserById(userData._id);
     const admin = await this.adminModel.findById(id);
+
     if (user._id.toString() === admin.user.toString()) {
       try {
         const admin = await this.adminModel.findById(id).exec();
