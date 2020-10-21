@@ -1,28 +1,13 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { queueType } from '../constants/queueType';
+import { Tier } from '../constants/tier';
 import { IMatchIndividual } from '../interfaces/matches-individual.interface';
 import { IPlayers } from '../interfaces/players.interface';
 
 dotenv.config();
 
 const defaultAxiosHeaders = { 'X-Riot-Token': process.env.RIOT_API_KEY };
-
-const Tier = [
-  { name: 'IRON', value: 'Ferro' },
-  { name: 'BRONZE', value: 'Bronze' },
-  { name: 'SILVER', value: 'Prata' },
-  { name: 'GOLD', value: 'Ouro' },
-  { name: 'PLATINUM', value: 'Platina' },
-  { name: 'DIAMOND', value: 'Diamante' },
-  { name: 'MASTER', value: 'Mestre' },
-  { name: 'GRANDMASTER', value: 'Grão-Mestre' },
-  { name: 'CHALLENGER', value: 'Desafiante' },
-];
-
-const qType = [
-  { name: 'RANKED_SOLO_5x5', value: 'Raqueada solo 5x5' },
-  { name: 'RANKED_TEAM_5x5', value: 'Raqueada time 5x5' },
-];
 
 @Injectable()
 export class SummonerService {
@@ -78,7 +63,7 @@ export class SummonerService {
       return result.map(el => ({
         ...el,
         tier: Tier.find(t => t.name === el['tier'])['value'],
-        queueType: qType.find(qu => qu.name === el['queueType'])['value'],
+        queueType: queueType.find(qu => qu.name === el['queueType'])['value'],
       }));
     } catch (err) {
       return err;
@@ -135,8 +120,6 @@ export class SummonerService {
   }
 
   async formatHistoryList(data: any) {
-    // TODO OTIMIZAR (24-30s)
-    // 19/10 -> 55s + (shit)
     const listMatch = data.matches.map(async match => {
       const response = await this.getSummonerIndividualMatch(match['gameId']);
       return response;

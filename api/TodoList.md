@@ -11,4 +11,14 @@
 - [ ] Profile csv
 - [ ] Swagger docs :question:
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
-- [ ] Match rating (:star::star::star::star::star:)<strong>
+- [ ] Match rating (:star::star::star::star::star:)
+- [ ] get  -> post  ou add parametro pra URL
+- [ ] cache -> cache match e info
+- [ ] criar as contantes  -> 
+- [ ] colocar no docker -> criar docker compose
+- [ ] add titulo a anotacao
+- [ ] criar login com google -> check passport
+- [ ] ADD env PORT=3000
+- [ ] add data de nascimento
+- [ ] add materias aplicadas pelo professor
+- [ ] add lista de contatos do user (twitter, discord, ...)<strong>
