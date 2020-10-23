@@ -17,6 +17,7 @@
 - [ ] colocar no docker -> criar docker compose
 - [x] <strike>add titulo a anotacao</strike>
 - [x] <strike>criar login com google -> check passport</strike>
+- [ ] <strike>rotas para oauth de cada tipo de usuário</strike>
 - [x] <strike>ADD env PORT=3000</strike>
 - [x] <strike>add data de nascimento</strike>
 - [x] <strike>add materias aplicadas pelo professor</strike>
