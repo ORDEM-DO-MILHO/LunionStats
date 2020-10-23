@@ -24,6 +24,9 @@ export class Teacher extends Document {
 
   @Prop({ enum: Object.values(Status) })
   status: string;
+
+  @Prop()
+  specialties: string[];
 }
 
 export const TeacherSchema = SchemaFactory.createForClass(Teacher);

@@ -9,16 +9,18 @@
 - [x] <strike>Match history :question: (needs to be optmized)</strike>
 - [ ] Riot API 
 - [ ] Profile csv
-- [ ] Swagger docs :question:
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [ ] Match rating (:star::star::star::star::star:)
 - [ ] get  -> post  ou add parametro pra URL
 - [ ] cache -> cache match e info
-- [ ] criar as contantes  -> 
+- [ ] criar as constantes  -> 
 - [ ] colocar no docker -> criar docker compose
-- [ ] add titulo a anotacao
-- [ ] criar login com google -> check passport
-- [ ] ADD env PORT=3000
-- [ ] add data de nascimento
-- [ ] add materias aplicadas pelo professor
-- [ ] add lista de contatos do user (twitter, discord, ...)<strong>
+- [x] <strike>add titulo a anotacao</strike>
+- [x] <strike>criar login com google -> check passport</strike>
+- [x] <strike>ADD env PORT=3000</strike>
+- [x] <strike>add data de nascimento</strike>
+- [x] <strike>add materias aplicadas pelo professor</strike>
+- [x] <strike>add lista de contatos do user (twitter, discord, ...)</strike>
+- [ ] documentação e instruções para chamadas
+- [ ] Swagger docs :question:
+</strong>

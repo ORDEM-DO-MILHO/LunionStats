@@ -24,6 +24,18 @@ export class User extends Document {
 
   @Prop({ enum: Object.values(Roles) })
   role: string;
+
+  @Prop({ type: Date, required: false })
+  birthday: Date;
+
+  @Prop({ required: false })
+  socials: [
+    {
+      provider: string;
+      username: string;
+      url: string;
+    },
+  ];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

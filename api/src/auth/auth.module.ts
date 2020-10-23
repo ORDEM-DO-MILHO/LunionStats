@@ -9,8 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import * as dotenv from 'dotenv';
 import { TeacherModule } from 'src/teacher/teacher.module';
 import { UserModule } from 'src/user/user.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import { GoogleStrategy } from './strategies/google.strategy';
 dotenv.config();
 
 @Module({
@@ -26,7 +25,7 @@ dotenv.config();
       },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

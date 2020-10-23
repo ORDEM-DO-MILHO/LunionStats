@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsDate, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class UpdateUserDto {
   id?: string;
@@ -10,5 +10,8 @@ export class UpdateUserDto {
   @IsNotEmpty()
   password: string;
 
-  role: string;
+  role?: string;
+
+  @IsDate()
+  birthday?: Date;
 }
