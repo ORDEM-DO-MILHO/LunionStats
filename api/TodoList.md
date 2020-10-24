@@ -7,7 +7,7 @@
 - [x] <strike>CRUD Admin</strike>
 - [x] <strike>ACL :question:</strike>
 - [x] <strike>Match history :question: (needs to be optmized)</strike>
-- [ ] Riot API 
+- [x] <strike>Riot API</strike> (funcionando, otimizar quando tiver tempo)
 - [ ] Profile csv
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [ ] Match rating (:star::star::star::star::star:)

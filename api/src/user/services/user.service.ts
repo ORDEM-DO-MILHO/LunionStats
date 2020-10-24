@@ -51,6 +51,17 @@ export class UserService {
     }
   }
 
+  public async findUserBySummoner(data: any) {
+    try {
+      const user = await this.userModel.findOne({
+        summoner: data.summoner,
+      });
+      return user;
+    } catch (err) {
+      throw new HttpException('did_not_find_any_student', HttpStatus.NOT_FOUND);
+    }
+  }
+
   public async findAllUsers() {
     const users = await this.userModel.find();
     users.map(u => (u.password = undefined));

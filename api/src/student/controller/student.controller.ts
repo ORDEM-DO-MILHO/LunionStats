@@ -42,13 +42,6 @@ export class StudentController {
     return await this.studentService.findStudentById(id);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles('admin', 'teacher')
-  @Get('/summoner/:summoner')
-  async findBySummoner(@Param() summoner: string) {
-    return await this.studentService.findStudentBySummoner(summoner);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Put('/:_id')
   async updStudent(

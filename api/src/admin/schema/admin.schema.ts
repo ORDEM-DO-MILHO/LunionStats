@@ -25,13 +25,6 @@ export class Admin extends Document {
   })
   name: string;
 
-  @Prop({
-    type: String,
-    unique: [true, 'summoner already exists'],
-    required: [true, 'summoner cannot be empty'],
-  })
-  summoner: string;
-
   @Prop({ enum: Object.values(Status) })
   status: string;
 

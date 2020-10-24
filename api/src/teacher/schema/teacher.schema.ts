@@ -12,18 +12,11 @@ export class Teacher extends Document {
   })
   name: string;
 
-  @Prop({
-    type: String,
-    unique: [true, 'summoner already exists'],
-    required: [true, 'summoner cannot be empty'],
-  })
-  summoner: string;
+  @Prop({ enum: Object.values(Status) })
+  status: string;
 
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User', unique: true })
   user: mongoose.Types.ObjectId;
-
-  @Prop({ enum: Object.values(Status) })
-  status: string;
 
   @Prop()
   specialties: string[];

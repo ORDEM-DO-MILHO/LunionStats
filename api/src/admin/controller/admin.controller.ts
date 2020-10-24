@@ -44,12 +44,6 @@ export class AdminController {
 
   @UseGuards(RolesGuard)
   @Roles('admin')
-  @Get('/summoner/:summoner')
-  async findBySummoner(@Param() summoner: string) {
-    return await this.adminService.findAdminBySummoner(summoner);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Put('/:_id')
   async updStudent(
     @Param() id: string,

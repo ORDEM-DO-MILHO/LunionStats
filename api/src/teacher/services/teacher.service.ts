@@ -81,22 +81,6 @@ export class TeacherService {
     }
   }
 
-  public async findTeacherBySummoner(data: any) {
-    try {
-      const teacher = await this.teacherModel.findOne({
-        summoner: data.summoner,
-      });
-      return teacher
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('did_not_find_any_teacher', HttpStatus.NOT_FOUND);
-    }
-  }
-
   public async updateTeacher(
     id: string,
     teacherData: UpdateTeacherDto,

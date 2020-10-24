@@ -43,13 +43,6 @@ export class TeacherController {
 
   @UseGuards(RolesGuard)
   @Roles('teacher', 'admin')
-  @Get('/summoner/:summoner')
-  public async findBySummoner(@Param() summoner: string) {
-    return await this.teacherService.findTeacherBySummoner(summoner);
-  }
-
-  @UseGuards(RolesGuard)
-  @Roles('teacher', 'admin')
   @Put('/:_id')
   public async updTeacher(
     @Param() id: string,

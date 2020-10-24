@@ -78,22 +78,6 @@ export class StudentService {
     }
   }
 
-  public async findStudentBySummoner(data: any) {
-    try {
-      const student = await this.studentModel.findOne({
-        summoner: data.summoner,
-      });
-      return student
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('did_not_find_any_student', HttpStatus.NOT_FOUND);
-    }
-  }
-
   async updateStudent(
     id: string,
     studentData: UpdateStudentDto,

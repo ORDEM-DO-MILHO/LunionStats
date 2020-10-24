@@ -95,22 +95,6 @@ export class AdminService {
     }
   }
 
-  public async findAdminBySummoner(data: any) {
-    try {
-      const admin = await this.adminModel.findOne({
-        summoner: data.summoner,
-      });
-      return admin
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('did_not_find_any_admin', HttpStatus.NOT_FOUND);
-    }
-  }
-
   async updateAdmin(
     id: string,
     adminData: UpdateAdminDto,
