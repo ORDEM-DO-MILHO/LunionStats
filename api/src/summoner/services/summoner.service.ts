@@ -5,10 +5,14 @@ import { queueType } from '../constants/queueType';
 import { Tier } from '../constants/tier';
 import { IMatchIndividual } from '../interfaces/matches-individual.interface';
 import { IPlayers } from '../interfaces/players.interface';
+import * as cacheAdapter from 'axios-cache-adapter';
 
 dotenv.config();
 
-const defaultAxiosHeaders = { 'X-Riot-Token': process.env.RIOT_API_KEY };
+const cache = cacheAdapter.setupCache({
+  maxAge: 3600 * 5000,
+});
+const defaultAxiosConfig = { 'X-Riot-Token': process.env.RIOT_API_KEY, cache };
 
 @Injectable()
 export class SummonerService {
@@ -23,7 +27,7 @@ export class SummonerService {
         .get(
           `https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${data.summoner}`,
           {
-            headers: defaultAxiosHeaders,
+            headers: defaultAxiosConfig,
           },
         )
         .toPromise();
@@ -41,7 +45,7 @@ export class SummonerService {
         .get(
           `https://br1.api.riotgames.com/lol/match/v4/matchlists/by-account/${accountId}?endIndex=${defaultMaxIndex}`,
           {
-            headers: defaultAxiosHeaders,
+            headers: defaultAxiosConfig,
           },
         )
         .toPromise();
@@ -62,7 +66,7 @@ export class SummonerService {
         .get(
           `https://br1.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}`,
           {
-            headers: defaultAxiosHeaders,
+            headers: defaultAxiosConfig,
           },
         )
         .toPromise();
@@ -87,7 +91,7 @@ export class SummonerService {
         .get(
           `https://br1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${id}`,
           {
-            headers: defaultAxiosHeaders,
+            headers: defaultAxiosConfig,
           },
         )
         .toPromise();
@@ -110,7 +114,7 @@ export class SummonerService {
     try {
       const { data: match } = await this.http
         .get(`https://br1.api.riotgames.com/lol/match/v4/matches/${body}`, {
-          headers: defaultAxiosHeaders,
+          headers: defaultAxiosConfig,
         })
         .toPromise();
 

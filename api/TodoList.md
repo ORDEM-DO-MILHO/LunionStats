@@ -12,7 +12,7 @@
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [x] <strike>Match rating (:star::star::star::star::star:)</strike>
 - [x] <strike>get  -> post  ou add parametro pra URL</strike>
-- [ ] cache -> cache match e info
+- [x] <strike>cache -> cache match e info</strike>
 - [ ] criar as constantes  -> 
 - [ ] colocar no docker -> criar docker compose
 - [x] <strike>add titulo a anotacao</strike>
@@ -24,4 +24,5 @@
 - [x] <strike>add lista de contatos do user (twitter, discord, ...)</strike>
 - [ ] documentação e instruções para chamadas
 - [ ] Swagger docs :question:
+- [ ] FRONTEND hehe xd
 </strong>

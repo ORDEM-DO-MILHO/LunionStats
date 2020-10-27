@@ -4,12 +4,11 @@ Following items are core technologies use in this project:
 
 - NestJS
 - TypeScript
-- 
 
 ## Installation
 
 ```bash
-cd server
+cd api
 
 npm i
 ```
@@ -17,7 +16,7 @@ npm i
 ## Running the app
 
 ```bash
-cd server
+cd api
 
 # development
 npm run start
