@@ -18,44 +18,56 @@ export class AuthService {
   public async registerUserTeacher(userData: CreateUserDto) {
     try {
       userData.password = await this.encryptPassword(userData.password);
-      const user = await this.userService.createUserTeacher(userData);
+      let user = await this.userService.findUserBySummoner(userData.summoner);
+      if (user) {
+        throw new HttpException(
+          'summoner_already_exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      user = await this.userService.createUserTeacher(userData);
       user.password = undefined;
       return user;
     } catch (err) {
-      throw new HttpException(
-        'student_create_went_wrong',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(err.message, err.code);
     }
   }
 
   public async registerUserStudent(userData: CreateUserDto) {
     try {
       userData.password = await this.encryptPassword(userData.password);
-      const user = await this.userService.createUserStudent(userData);
+      let user = await this.userService.findUserBySummoner(userData.summoner);
+      if (user) {
+        throw new HttpException(
+          'summoner_already_exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      user = await this.userService.createUserStudent(userData);
       user.password = undefined;
 
       return user;
     } catch (err) {
-      throw new HttpException(
-        'student_create_went_wrong',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(err.message, err.code);
     }
   }
 
   public async registerUserAdmin(userData: CreateUserDto) {
     try {
       userData.password = await this.encryptPassword(userData.password);
-      const user = await this.userService.createUserAdmin(userData);
+      let user = await this.userService.findUserBySummoner(userData.summoner);
+      if (user) {
+        throw new HttpException(
+          'summoner_already_exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      user = await this.userService.createUserAdmin(userData);
       user.password = undefined;
 
       return user;
     } catch (err) {
-      throw new HttpException(
-        'student_create_went_wrong',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(err.message, err.code);
     }
   }
 

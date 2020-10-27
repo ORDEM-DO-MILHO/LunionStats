@@ -30,6 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const userLogin = {
       email: done['emails'][0].value,
       password: done['id'],
+      summoner: '',
     };
 
     let user = await this.userService.findUserByEmail(userLogin.email);

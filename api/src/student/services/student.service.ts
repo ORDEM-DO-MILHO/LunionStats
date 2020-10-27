@@ -8,6 +8,7 @@ import * as mongoose from 'mongoose';
 import { UserService } from 'src/user/services/user.service';
 import { UpdateStudentDto } from '../dto/update-student.dto';
 import { UserRequestDto } from 'src/user/dto/user-request.dto';
+import { IStudent } from '../interfaces/student.interface';
 @Injectable()
 export class StudentService {
   constructor(
@@ -35,26 +36,28 @@ export class StudentService {
         .execPopulate();
     } catch (err) {
       if (err.code === 11000) {
-        const message = err.message.split('{')[1];
         return {
-          message: `{${message} already exists`,
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
         };
       }
-      throw new HttpException(
-        'student_create_bad_request',
-        HttpStatus.BAD_REQUEST,
-      );
+      return err.keyValue;
     }
   }
 
-  async findAll(): Promise<Student[]> {
+  async findAll() {
     try {
       return await this.studentModel
         .find()
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
+        .populate([
+          {
+            path: 'user',
+            select: '-__v -password',
+          },
+          {
+            path: 'annotations',
+          },
+        ])
         .exec();
     } catch (err) {
       throw new HttpException(
@@ -68,40 +71,29 @@ export class StudentService {
     try {
       const student = await this.studentModel.findById(id).exec();
       return student
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
+        .populate([
+          {
+            path: 'user',
+            select: '-__v -password',
+          },
+          {
+            path: 'annotations',
+          },
+        ])
         .execPopulate();
     } catch (err) {
       throw new HttpException('student_not_found', HttpStatus.NOT_FOUND);
     }
   }
 
-  public async findStudentBySummoner(data: any) {
-    try {
-      const student = await this.studentModel.findOne({
-        summoner: data.summoner,
-      });
-      return student
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('did_not_find_any_student', HttpStatus.NOT_FOUND);
-    }
-  }
-
-  async updateStudent(
-    id: string,
-    studentData: UpdateStudentDto,
-    userData: UserRequestDto,
-  ) {
+  async updateStudent(id: string, studentData: any, userData: any) {
     const user = await this.userService.findUserById(userData._id);
     const student = await this.studentModel.findById(id);
-    if (user._id.toString() === student.user.toString()) {
+    if (
+      user._id.toString() === student.user.toString() ||
+      user.role === 'teacher' ||
+      user.role === 'admin'
+    ) {
       try {
         await this.studentModel.findByIdAndUpdate(id, studentData).exec();
         const student = await this.studentModel.findById(id);
@@ -136,44 +128,4 @@ export class StudentService {
       );
     }
   }
-
-  // async createStudentAnnotation(studentId: string, annotation: any) {
-  //   // try {
-  //   //   let student = await this.studentModel.findById(studentId);
-  //   //   student.annotations = annotation;
-  //   //   console.log(student);
-  //   //   return await student.save();
-  //   // } catch (err) {
-  //   //   console.log(err);
-  //   //   throw new BadRequestException();
-  //   // }
-  // }
-
-  // async updateStudentAnnotation(id: string, annotation: any) {
-  //   //   try {
-  //   //     const s = await this.studentModel.findOneAndUpdate(
-  //   //       { _id:
-  //   //         'annotations._id': annotation._id,
-  //   //       },
-  //   //       { $addToSet: { annotations_id: annotation } },
-  //   //     );
-  //   //     console.log(s);
-  //   //   } catch (err) {
-  //   //     console.log(err);
-  //   //     throw new BadRequestException();
-  //   //   }
-  // }
-
-  // async deleteStudentAnnotation(id: string, annotation: any) {
-  //   //   try {
-  //   //     const student = await this.studentModel.findById(id);
-  //   //     await student.annotations
-  //   //       .id(mongoose.Types.ObjectId(annotation._id))
-  //   //       .remove();
-  //   //     return await student.save();
-  //   //   } catch (err) {
-  //   //     console.log(err);
-  //   //     throw new BadRequestException();
-  //   //   }
-  // }
 }

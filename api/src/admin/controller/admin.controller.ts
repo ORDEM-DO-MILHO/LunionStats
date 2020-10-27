@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Post,
   Put,
@@ -32,7 +33,11 @@ export class AdminController {
   @Roles('admin')
   @Post('/create')
   async create(@Req() userData: any, @Body() studentData: CreateAdminDto) {
-    return await this.adminService.createAdmin(studentData, userData.user);
+    try {
+      return await this.adminService.createAdmin(studentData, userData.user);
+    } catch (err) {
+      throw new HttpException(err.message, err.code);
+    }
   }
 
   @UseGuards(RolesGuard)
@@ -44,12 +49,6 @@ export class AdminController {
 
   @UseGuards(RolesGuard)
   @Roles('admin')
-  @Get('/summoner/:summoner')
-  async findBySummoner(@Param() summoner: string) {
-    return await this.adminService.findAdminBySummoner(summoner);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Put('/:_id')
   async updStudent(
     @Param() id: string,

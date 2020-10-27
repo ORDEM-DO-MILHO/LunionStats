@@ -5,4 +5,5 @@ export interface IAnnotation extends Document {
   content: string;
   matchId: string;
   teacherId: string;
+  studentId: string;
 }

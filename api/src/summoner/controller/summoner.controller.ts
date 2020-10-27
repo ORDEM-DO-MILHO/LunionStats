@@ -1,20 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Body, Controller, Post, HttpException } from '@nestjs/common';
 import { SummonerService } from '../services/summoner.service';
-// import { data } from './data';
+
 @Controller('summoner')
 export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
 
-  @Get('/info')
+  @Post('/info')
   async getSummonerInfos(@Body() summoner: string) {
     try {
-      //data.teams[0].dragonKills
       const result = await this.summonerService.getSummonerInfo(summoner);
       return result;
     } catch (error) {
@@ -22,39 +15,50 @@ export class SummonerController {
     }
   }
 
-  @Get('/history')
+  @Post('/history')
   async getSummonerMatches(@Body() summoner: string) {
-    const result = await this.summonerService.getSummonerMatchHistory(
-      summoner,
-      null,
-    );
-
-    return result;
+    try {
+      const result = await this.summonerService.getSummonerMatchHistory(
+        summoner,
+        null,
+      );
+      return result;
+    } catch (error) {
+      throw new HttpException(error, error.status);
+    }
   }
 
-  @Get('/league')
+  @Post('/league')
   async getSummonerLeague(@Body() summoner: string) {
-    const result = await this.summonerService.getSummonerLeague(summoner);
-    if (result.message) {
-      const code = result.message.split('code')[1];
-      throw new HttpException('something_went_wrong', code);
+    try {
+      const result = await this.summonerService.getSummonerLeague(summoner);
+      if (result.message) {
+        const code = result.message.split('code')[1];
+        throw new HttpException('something_went_wrong', code);
+      }
+      return result;
+    } catch (error) {
+      throw new HttpException(error, error.status);
     }
-    return result;
   }
 
-  @Get('/masteries')
+  @Post('/masteries')
   async summonerChampMasteries(@Body() summonerId: string) {
-    const result = await this.summonerService.summonerChampionMasteries(
-      summonerId,
-    );
-    if (result.message) {
-      const code = result.message.split('code')[1];
-      throw new HttpException('something_went_wrong', code);
+    try {
+      const result = await this.summonerService.summonerChampionMasteries(
+        summonerId,
+      );
+      if (result.message) {
+        const code = result.message.split('code')[1];
+        throw new HttpException('something_went_wrong', code);
+      }
+      return result;
+    } catch (error) {
+      throw new HttpException(error, error.status);
     }
-    return result;
   }
 
-  @Get('/match')
+  @Post('/match')
   async summonerMatch(@Body() matchId: bigint) {
     try {
       const result = await this.summonerService.getSummonerIndividualMatch(
@@ -62,7 +66,7 @@ export class SummonerController {
       );
       return result;
     } catch (error) {
-      throw new HttpException('something_went_wrong', error);
+      throw new HttpException(error.message, error.status);
     }
   }
 }

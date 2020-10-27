@@ -22,6 +22,13 @@ export class User extends Document {
   })
   password: string;
 
+  @Prop({
+    type: String,
+    unique: true,
+    required: [true, 'summoner cannot be empty'],
+  })
+  summoner: string;
+
   @Prop({ enum: Object.values(Roles) })
   role: string;
 

@@ -36,15 +36,12 @@ export class AdminService {
         .execPopulate();
     } catch (err) {
       if (err.code === 11000) {
-        const message = err.message.split('{')[1];
         return {
-          message: `{${message} already exists`,
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
         };
       }
-      throw new HttpException(
-        'admin_create_bad_request',
-        HttpStatus.BAD_REQUEST,
-      );
+      return err.keyValue;
     }
   }
 
@@ -83,22 +80,6 @@ export class AdminService {
     try {
       const admin = await this.adminModel.findOne({
         user: data.user,
-      });
-      return admin
-        .populate({
-          path: 'user',
-          select: '-__v -password',
-        })
-        .execPopulate();
-    } catch (err) {
-      throw new HttpException('did_not_find_any_admin', HttpStatus.NOT_FOUND);
-    }
-  }
-
-  public async findAdminBySummoner(data: any) {
-    try {
-      const admin = await this.adminModel.findOne({
-        summoner: data.summoner,
       });
       return admin
         .populate({

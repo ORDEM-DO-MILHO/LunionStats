@@ -1,4 +1,5 @@
 import { MaxLength, MinLength } from 'class-validator';
+import { Annotation } from 'src/annotation/schema/annotation.schema';
 
 export class UpdateStudentDto {
   id?: string;
@@ -6,10 +7,6 @@ export class UpdateStudentDto {
   @MinLength(1, { message: 'name must have at least one character' })
   @MaxLength(50, { message: 'name is too long' })
   name: string;
-
-  @MinLength(1, { message: 'summoner must have at least one character' })
-  @MaxLength(50, { message: 'summoner is too long' })
-  summoner: string;
 
   status: string;
 }

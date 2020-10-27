@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Status } from 'src/auth/types/status.type';
-import { Annotation } from './annotation.schema';
 import * as mongoose from 'mongoose';
+import { Annotation } from 'src/annotation/schema/annotation.schema';
 
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id;
@@ -26,13 +26,6 @@ export class Student extends Document {
   })
   name: string;
 
-  @Prop({
-    type: String,
-    unique: [true, 'summoner already exists'],
-    required: [true, 'summoner cannot be empty'],
-  })
-  summoner: string;
-
   @Prop({ enum: Object.values(Status) })
   status: string;
 
@@ -40,7 +33,7 @@ export class Student extends Document {
   user: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.Types.ObjectId, ref: 'Annotation' })
-  annotations: Annotation;
+  annotations: mongoose.Types.ObjectId;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

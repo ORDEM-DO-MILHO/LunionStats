@@ -19,7 +19,13 @@ export class UserService {
       const user = new this.userModel(userData);
       return await user.save();
     } catch (err) {
-      throw new HttpException('could_not_create_user', HttpStatus.BAD_REQUEST);
+      if (err.code === 11000) {
+        return {
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
+        };
+      }
+      return err.keyValue;
     }
   }
 
@@ -29,7 +35,13 @@ export class UserService {
       const user = new this.userModel(userData);
       return await user.save();
     } catch (err) {
-      throw new HttpException('could_not_create_user', HttpStatus.BAD_REQUEST);
+      if (err.code === 11000) {
+        return {
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
+        };
+      }
+      return err.keyValue;
     }
   }
 
@@ -39,7 +51,13 @@ export class UserService {
       const user = new this.userModel(userData);
       return await user.save();
     } catch (err) {
-      throw new HttpException('could_not_create_user', HttpStatus.BAD_REQUEST);
+      if (err.code === 11000) {
+        return {
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
+        };
+      }
+      return err.keyValue;
     }
   }
 
@@ -48,6 +66,17 @@ export class UserService {
       return await this.userModel.findOne({ email }).exec();
     } catch (err) {
       throw new HttpException('user_not_found', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  public async findUserBySummoner(data: any) {
+    try {
+      const user = await this.userModel.findOne({
+        summoner: data,
+      });
+      return user;
+    } catch (err) {
+      throw new HttpException('did_not_find_any_student', HttpStatus.NOT_FOUND);
     }
   }
 

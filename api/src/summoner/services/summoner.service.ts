@@ -1,5 +1,6 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { AnnotationService } from 'src/annotation/services/annotation.service';
 import { queueType } from '../constants/queueType';
 import { Tier } from '../constants/tier';
 import { IMatchIndividual } from '../interfaces/matches-individual.interface';
@@ -11,7 +12,10 @@ const defaultAxiosHeaders = { 'X-Riot-Token': process.env.RIOT_API_KEY };
 
 @Injectable()
 export class SummonerService {
-  constructor(private readonly http: HttpService) {}
+  constructor(
+    private readonly http: HttpService,
+    private readonly annotationService: AnnotationService,
+  ) {}
 
   async getSummonerInfo(data: any) {
     try {
@@ -43,8 +47,11 @@ export class SummonerService {
         .toPromise();
 
       return await this.formatHistoryList(data);
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return {
+        message: error.response.statusText,
+        status: error.response.status,
+      };
     }
   }
 
@@ -65,8 +72,11 @@ export class SummonerService {
         tier: Tier.find(t => t.name === el['tier'])['value'],
         queueType: queueType.find(qu => qu.name === el['queueType'])['value'],
       }));
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return {
+        message: error.response.statusText,
+        status: error.response.status,
+      };
     }
   }
 
@@ -88,44 +98,67 @@ export class SummonerService {
         ...el,
         championId: championList.find(ch => ch.key === el.championId)['name'],
       }));
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return {
+        message: error.response.statusText,
+        status: error.response.status,
+      };
     }
   }
 
   async getSummonerIndividualMatch(body: any) {
-    const { data: match } = await this.http
-      .get(`https://br1.api.riotgames.com/lol/match/v4/matches/${body}`, {
-        headers: defaultAxiosHeaders,
-      })
-      .toPromise();
+    try {
+      const { data: match } = await this.http
+        .get(`https://br1.api.riotgames.com/lol/match/v4/matches/${body}`, {
+          headers: defaultAxiosHeaders,
+        })
+        .toPromise();
 
-    const queueList = await this.getQueuesList();
-    const seasonsList = await this.getSeasonsList();
+      const queueList = await this.getQueuesList();
+      const seasonsList = await this.getSeasonsList();
+      const annotationsList = await this.findAllAnnotationsMatchId(body);
+      const players = await this.formatPlayerInfo(match);
 
-    const players = await this.formatPlayerInfo(match);
+      const gameList: IMatchIndividual = {
+        gameId: match.gameId,
+        annotations: annotationsList === null ? null : annotationsList,
+        gameCreation: match.gameCreation,
+        gameDuration: match.gameDuration,
+        queueId: queueList.find(qu => qu.queueId === match.queueId)['map'],
+        seasonId: seasonsList.find(se => se.id === match.seasonId)['season'],
+        gameMode: match.gameMode,
+        gameType: match.gameType,
+        players,
+      };
 
-    const gameList: IMatchIndividual = {
-      gameId: match.gameId,
-      gameCreation: match.gameCreation,
-      gameDuration: match.gameDuration,
-      queueId: queueList.find(qu => qu.queueId === match.queueId)['map'],
-      seasonId: seasonsList.find(se => se.id === match.seasonId)['season'],
-      gameMode: match.gameMode,
-      gameType: match.gameType,
-      players,
-    };
+      return gameList;
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.response.statusText,
+        status: error.response.status,
+      };
+    }
+  }
 
-    return gameList;
+  async findAllAnnotationsMatchId(matchId: any) {
+    return await this.annotationService.findAnnotationByMatchId(matchId);
   }
 
   async formatHistoryList(data: any) {
-    const listMatch = data.matches.map(async match => {
-      const response = await this.getSummonerIndividualMatch(match['gameId']);
-      return response;
-    });
+    try {
+      const listMatch = data.matches.map(async match => {
+        const response = await this.getSummonerIndividualMatch(match['gameId']);
+        return response;
+      });
 
-    return await Promise.all(listMatch);
+      return await Promise.all(listMatch);
+    } catch (error) {
+      return {
+        message: error.response.statusText,
+        status: error.response.status,
+      };
+    }
   }
 
   async formatPlayerStats(match: any) {

@@ -1,0 +1,40 @@
+[
+{
+	"email": "teacher@example.com",
+	"password": "123123",
+	"birthday": "12/20/1990",
+	"socials": [{
+		"provider": "google",
+		"username": "teacher_go"
+	}, {
+		"provider": "facebook",
+		"username": "teacher_fb"
+	}],
+	"summoner": "new asd"
+},  
+{
+	"email": "teacher2@example.com",
+	"password": "123123",
+	"birthday": "05/09/1990",
+	"socials": [{
+		"provider": "google",
+		"username": "teacher2_go"
+	}, {
+		"provider": "facebook",
+		"username": "teacher2_fb"
+	}],
+	"summoner": "new teacher summ"
+},
+{
+	"email": "teacher3@example.com",
+	"password": "123123",
+	"birthday": "02/21/1998",
+	"socials": [{
+		"provider": "google",
+		"username": "teacher3_go"
+	}, {
+		"provider": "facebook",
+		"username": "teacher3_fb"
+	}],
+	"summoner": "teacher3"
+}]

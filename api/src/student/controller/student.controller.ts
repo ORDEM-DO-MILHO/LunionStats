@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Post,
   Put,
@@ -32,7 +33,14 @@ export class StudentController {
   @Roles('student')
   @Post('/create')
   async create(@Req() userData: any, @Body() studentData: CreateStudentDto) {
-    return await this.studentService.createStudent(studentData, userData.user);
+    try {
+      return await this.studentService.createStudent(
+        studentData,
+        userData.user,
+      );
+    } catch (err) {
+      throw new HttpException(err.message, err.code);
+    }
   }
 
   @UseGuards(RolesGuard)
@@ -40,13 +48,6 @@ export class StudentController {
   @Get('/:_id')
   async findById(@Param() id: string) {
     return await this.studentService.findStudentById(id);
-  }
-
-  @UseGuards(RolesGuard)
-  @Roles('admin', 'teacher')
-  @Get('/summoner/:summoner')
-  async findBySummoner(@Param() summoner: string) {
-    return await this.studentService.findStudentBySummoner(summoner);
   }
 
   @UseGuards(JwtAuthGuard)

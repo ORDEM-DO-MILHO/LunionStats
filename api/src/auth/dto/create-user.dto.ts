@@ -1,4 +1,4 @@
-import { IsEmail, MaxLength, MinLength } from 'class-validator';
+import { IsDate, IsEmail, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -10,7 +10,12 @@ export class CreateUserDto {
   @MaxLength(100, { message: 'password is too long' })
   password: string;
 
-  role?: string;
+  @MinLength(3, { message: 'summoner must have more than 3 characters' })
+  @MaxLength(50, { message: 'summoner must have no more than 50 characters' })
+  summoner: string;
 
+  @IsDate()
   birthday?: Date;
+
+  role?: string;
 }
