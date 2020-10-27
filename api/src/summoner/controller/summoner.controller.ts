@@ -58,6 +58,7 @@ export class SummonerController {
     }
   }
 
+  // DEV ONLY, DO NOT USE
   @Post('/match')
   async summonerMatch(@Body() matchId: bigint) {
     try {

@@ -4,6 +4,8 @@ Following items are core technologies use in this project:
 
 - NestJS
 - TypeScript
+- ReactJS
+- JWT
 
 ## Installation
 

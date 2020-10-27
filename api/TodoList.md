@@ -5,11 +5,11 @@
 - [x] <strike>JwtAuth</strike> 
 - [x] <strike>CRUD Teacher</strike>
 - [x] <strike>CRUD Admin</strike>
-- [x] <strike>ACL :question:</strike>
-- [x] <strike>Match history :question: (needs to be optmized)</strike>
+- [x] <strike>ACL</strike> :question:
+- [x] <strike>Match history (needs to be optmized)</strike>
 - [x] <strike>Riot API</strike> (funcionando, otimizar quando tiver tempo)
 - [ ] Profile csv
-- [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
+- [x] <strike>Annotations per match</strike> :small_red_triangle: :small_red_triangle: :small_red_triangle:
 - [x] <strike>Match rating (:star::star::star::star::star:)</strike>
 - [x] <strike>get  -> post  ou add parametro pra URL</strike>
 - [x] <strike>cache -> cache match e info</strike>
@@ -17,7 +17,7 @@
 - [ ] colocar no docker -> criar docker compose
 - [x] <strike>add titulo a anotacao</strike>
 - [x] <strike>criar login com google -> check passport</strike>
-- [ ] <strike>rotas para oauth de cada tipo de usuário</strike>
+- [ ] rotas para oauth de cada tipo de usuário
 - [x] <strike>ADD env PORT=3000</strike>
 - [x] <strike>add data de nascimento</strike>
 - [x] <strike>add materias aplicadas pelo professor</strike>
