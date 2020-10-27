@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Post,
   Put,
@@ -32,7 +33,11 @@ export class AdminController {
   @Roles('admin')
   @Post('/create')
   async create(@Req() userData: any, @Body() studentData: CreateAdminDto) {
-    return await this.adminService.createAdmin(studentData, userData.user);
+    try {
+      return await this.adminService.createAdmin(studentData, userData.user);
+    } catch (err) {
+      throw new HttpException(err.message, err.code);
+    }
   }
 
   @UseGuards(RolesGuard)

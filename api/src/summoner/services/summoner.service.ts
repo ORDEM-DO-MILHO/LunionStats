@@ -1,5 +1,6 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { AnnotationService } from 'src/annotation/services/annotation.service';
 import { queueType } from '../constants/queueType';
 import { Tier } from '../constants/tier';
 import { IMatchIndividual } from '../interfaces/matches-individual.interface';
@@ -11,7 +12,10 @@ const defaultAxiosHeaders = { 'X-Riot-Token': process.env.RIOT_API_KEY };
 
 @Injectable()
 export class SummonerService {
-  constructor(private readonly http: HttpService) {}
+  constructor(
+    private readonly http: HttpService,
+    private readonly annotationService: AnnotationService,
+  ) {}
 
   async getSummonerInfo(data: any) {
     try {
@@ -112,11 +116,12 @@ export class SummonerService {
 
       const queueList = await this.getQueuesList();
       const seasonsList = await this.getSeasonsList();
-
+      const annotationsList = await this.findAllAnnotationsMatchId(body);
       const players = await this.formatPlayerInfo(match);
 
       const gameList: IMatchIndividual = {
         gameId: match.gameId,
+        annotations: annotationsList === null ? null : annotationsList,
         gameCreation: match.gameCreation,
         gameDuration: match.gameDuration,
         queueId: queueList.find(qu => qu.queueId === match.queueId)['map'],
@@ -128,11 +133,16 @@ export class SummonerService {
 
       return gameList;
     } catch (error) {
+      console.log(error);
       return {
         message: error.response.statusText,
         status: error.response.status,
       };
     }
+  }
+
+  async findAllAnnotationsMatchId(matchId: any) {
+    return await this.annotationService.findAnnotationByMatchId(matchId);
   }
 
   async formatHistoryList(data: any) {

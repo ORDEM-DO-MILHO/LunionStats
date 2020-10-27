@@ -24,7 +24,7 @@ export class User extends Document {
 
   @Prop({
     type: String,
-    unique: [true, 'summoner already exists'],
+    unique: true,
     required: [true, 'summoner cannot be empty'],
   })
   summoner: string;

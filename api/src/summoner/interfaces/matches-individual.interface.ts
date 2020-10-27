@@ -9,4 +9,5 @@ export interface IMatchIndividual {
   gameMode: string;
   gameType: string;
   players: IPlayers;
+  annotations?: any[];
 }

@@ -10,6 +10,7 @@ import { AccessControlModule } from 'nest-access-control';
 import { roles } from './user/types/role.type';
 import { AdminModule } from './admin/admin.module';
 import { SummonerModule } from './summoner/summoner.module';
+import { AnnotationModule } from './annotation/annotation.module';
 dotenv.config();
 
 @Module({
@@ -27,6 +28,7 @@ dotenv.config();
     UserModule,
     AdminModule,
     SummonerModule,
+    AnnotationModule,
   ],
   controllers: [],
   providers: [],

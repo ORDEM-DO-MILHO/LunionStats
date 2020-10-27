@@ -1,4 +1,5 @@
 import { MaxLength, MinLength } from 'class-validator';
+import { Annotation } from 'src/annotation/schema/annotation.schema';
 
 export class UpdateStudentDto {
   id?: string;

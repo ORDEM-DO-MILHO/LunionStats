@@ -6,7 +6,7 @@ export class UpdateAnnotationDto {
   @IsString()
   @MinLength(1, { message: 'content is too short' })
   @MaxLength(50, { message: 'content is too long' })
-  title: string;
+  title?: string;
 
   @IsString()
   @MinLength(1, { message: 'content is too short' })

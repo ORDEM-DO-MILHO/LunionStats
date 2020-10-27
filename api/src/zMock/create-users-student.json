@@ -1,0 +1,31 @@
+[
+{
+	"email": "student@example.com",
+	"password": "123123",
+	"birthday": "02/25/1998",
+	"socials": [{
+		"provider": "google",
+		"username": "student_google"
+	}],
+	"summoner": "studentttttt"
+},  
+{
+	"email": "student2@example.com",
+	"password": "123123",
+	"birthday": "06/30/1998",
+	"socials": [{
+		"provider": "facebook",
+		"username": "stu"
+	}],
+	"summoner": "new stud"
+},
+{
+	"email": "student3@example.com",
+	"password": "123123",
+	"birthday": "08/08/1998",
+	"socials": [{
+		"provider": "twitter",
+		"username": "tt stud"
+	}],
+	"summoner": "tt xx tt"
+}]

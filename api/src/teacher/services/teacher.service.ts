@@ -8,12 +8,16 @@ import { UserService } from 'src/user/services/user.service';
 import { Status } from 'src/auth/types/status.type';
 import * as mongoose from 'mongoose';
 import { UserRequestDto } from 'src/user/dto/user-request.dto';
+import { AnnotationService } from 'src/annotation/services/annotation.service';
+import { CreateAnnotationDto } from '../dto/create-annotation.dto';
+import { IUserCtx } from 'src/auth/interfaces/user-ctx.interface';
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectModel(Teacher.name)
     private readonly teacherModel: Model<Teacher>,
     private readonly userService: UserService,
+    private readonly annotationService: AnnotationService,
   ) {}
 
   public async createTeacher(
@@ -38,15 +42,12 @@ export class TeacherService {
         .execPopulate();
     } catch (err) {
       if (err.code === 11000) {
-        const message = err.message.split('{')[1];
         return {
-          message: `{${message} already exists`,
+          message: `${Object.keys(err.keyValue)} already exists!`,
+          code: 400,
         };
       }
-      throw new HttpException(
-        'teacher_create_bad_request',
-        HttpStatus.BAD_REQUEST,
-      );
+      return err.keyValue;
     }
   }
 
@@ -121,6 +122,22 @@ export class TeacherService {
         'could_not_delete_teacher',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  public async createAnnotation(data: CreateAnnotationDto, user: IUserCtx) {
+    try {
+      return await this.annotationService.createAnnotation(data, user);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  public async findAnnotationByTeacherId(id: string) {
+    try {
+      return await this.annotationService.findAnnotationByTeacherId(id);
+    } catch (error) {
+      return error;
     }
   }
 }

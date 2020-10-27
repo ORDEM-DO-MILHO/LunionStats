@@ -10,8 +10,8 @@
 - [x] <strike>Riot API</strike> (funcionando, otimizar quando tiver tempo)
 - [ ] Profile csv
 - [ ] Annotations per match :small_red_triangle: :small_red_triangle: :small_red_triangle:
-- [ ] Match rating (:star::star::star::star::star:)
-- [ ] get  -> post  ou add parametro pra URL
+- [x] <strike>Match rating (:star::star::star::star::star:)</strike>
+- [x] <strike>get  -> post  ou add parametro pra URL</strike>
 - [ ] cache -> cache match e info
 - [ ] criar as constantes  -> 
 - [ ] colocar no docker -> criar docker compose

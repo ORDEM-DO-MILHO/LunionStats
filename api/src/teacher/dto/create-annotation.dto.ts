@@ -10,9 +10,13 @@ export class CreateAnnotationDto {
 
   @IsString()
   @MinLength(1, { message: 'content is too short' })
-  content?: string;
+  content: string;
 
-  matchId?: string;
+  matchId: bigint;
 
-  teacherId?: string;
+  teacherId: string;
+
+  studentId: string;
+
+  rating: number;
 }
